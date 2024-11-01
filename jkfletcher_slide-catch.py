@@ -9,13 +9,17 @@ class Game(simpleGE.Scene):
         self.setImage("OGA-Background-1.png")
         
         self.rocket = Rocket(self)
-        self.meteor = Meteor(self)
+        self.numMeteors = 10
+        self.meteors = []
+        for i in range(self.numMeteors):
+            self.meteors.append(Meteor(self))
         
-        self.sprites = [self.rocket, self.meteor]
+        self.sprites = [self.rocket, self.meteors]
 
     def process(self):
-        if self.meteor.collidesWith(self.rocket):
-            self.meteor.reset()
+        for meteor in self.meteors:
+            if self.rocket.collidesWith(meteor):
+                meteor.reset()
 
         
 class Rocket(simpleGE.Sprite):
