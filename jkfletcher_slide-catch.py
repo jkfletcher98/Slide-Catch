@@ -8,14 +8,22 @@ class Game(simpleGE.Scene):
         super().__init__()
         self.setImage("OGA-Background-1.png")
         
+        self.timer = simpleGE.Timer()
+        
+        self.lives = 3
+        
         self.rocket = Rocket(self)
-        self.numMeteors = 10
+        self.numMeteors = 8
         self.meteors = []
         for i in range(self.numMeteors):
             self.meteors.append(Meteor(self))
+            
+        self.lblTime = lblTime()
         
-        self.sprites = [self.rocket, self.meteors]
-
+        self.lblLives = lblLives()
+        
+        self.sprites = [self.rocket, self.meteors, self.lblTime, self.lblLives]
+        
     def process(self):
         for meteor in self.meteors:
             if self.rocket.collidesWith(meteor):
@@ -27,7 +35,7 @@ class Rocket(simpleGE.Sprite):
         super().__init__(scene)
         self.setImage("ship_recolor_001.png")
         self.setSize(75, 75)
-        self.position = (320, 420)
+        self.position = (320, 400)
         self.moveSpeed = 5
         
     def process(self):
@@ -41,7 +49,7 @@ class Meteor(simpleGE.Sprite):
     def __init__(self, scene):
         super().__init__(scene)
         self.setImage("Asteroid2.png")
-        self.setSize(50, 50)
+        self.setSize(48, 48)
         self.reset()
         
     def reset(self):
@@ -52,6 +60,20 @@ class Meteor(simpleGE.Sprite):
     def checkBounds(self):
         if self.bottom > self.screenHeight:
             self.reset()
+            
+            
+class lblTime(simpleGE.Label):
+    def __init__(self):
+        super().__init__()
+        self.text = "Time: 0"
+        self.center = (540, 30)
+        
+        
+class lblLives(simpleGE.Label):
+    def __init__(self):
+        super().__init__()
+        self.text = "Lives: 3"
+        self.center = (95, 30)
             
             
 def main():
