@@ -3,6 +3,41 @@
 
 import random, pygame, simpleGE
 
+class Instructions(simpleGE.Scene):
+    def __init__(self):
+        super().__init__()
+        self.setImage("OGA-Background-1.png")
+        
+        self.response = "Play"
+        
+        self.instructions = simpleGE.MultiLabel()
+        self.instructions.textLines = [
+            "Avoid the meteors!",
+            "Use the left and right arrows to move.",
+            "You have 3 lives."
+            ]
+        self.instructions.center = (320, 240)
+        self.instructions.size = (500, 250)
+        
+        self.btnPlay = simpleGE.Button()
+        self.btnPlay.text = "Play"
+        self.btnPlay.center = (100, 400)
+        
+        self.btnQuit = simpleGE.Button()
+        self.btnQuit.text = "Quit"
+        self.btnQuit.center = (550, 400)
+        
+        self.sprites = [self.instructions, self.btnPlay, self.btnQuit]
+        
+    def process(self):
+        if self.btnQuit.clicked:
+            self.response = "Quit"
+            self.stop()
+        if self.btnPlay.clicked:
+            self.response = "Play"
+            self.stop()
+
+
 class Game(simpleGE.Scene):
     def __init__(self):
         super().__init__()
@@ -28,6 +63,11 @@ class Game(simpleGE.Scene):
         for meteor in self.meteors:
             if self.rocket.collidesWith(meteor):
                 meteor.reset()
+                self.lives -= 1
+                self.lblLives.text = f"Lives: {self.lives}"
+                
+            if self.lives == 0:
+                self.stop()
 
         
 class Rocket(simpleGE.Sprite):
@@ -77,9 +117,19 @@ class lblLives(simpleGE.Label):
             
             
 def main():
-    game = Game()
-    game.start()
-    
+    keepGoing = True
+    while keepGoing:
+        
+        instructions = Instructions()
+        instructions.start()
+        print(instructions.response)
+        
+        if instructions.response == "Play":
+            game = Game()
+            game.start()
+        if instructions.response == "Quit":
+            keepGoing = False
+            
     
 if __name__ == "__main__":
     main()
