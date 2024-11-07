@@ -4,7 +4,7 @@
 import random, pygame, simpleGE
 
 class Instructions(simpleGE.Scene):
-    def __init__(self):
+    def __init__(self, time):
         super().__init__()
         self.setImage("OGA-Background-1.png")
         
@@ -23,11 +23,17 @@ class Instructions(simpleGE.Scene):
         self.btnPlay.text = "Play"
         self.btnPlay.center = (100, 400)
         
+        self.prevTime = time
+        self.prevTime = simpleGE.Label()
+        self.prevTime.text = f"Previous Time: {time:.2f}"
+        self.prevTime.size = (250, 30)
+        self.prevTime.center = (320, 400)
+        
         self.btnQuit = simpleGE.Button()
         self.btnQuit.text = "Quit"
         self.btnQuit.center = (550, 400)
         
-        self.sprites = [self.instructions, self.btnPlay, self.btnQuit]
+        self.sprites = [self.instructions, self.prevTime, self.btnPlay, self.btnQuit]
         
     def process(self):
         if self.btnQuit.clicked:
@@ -44,6 +50,7 @@ class Game(simpleGE.Scene):
         self.setImage("OGA-Background-1.png")
         
         self.timer = simpleGE.Timer()
+        self.time = 0
         
         self.lives = 3
         
@@ -66,10 +73,12 @@ class Game(simpleGE.Scene):
                 self.lives -= 1
                 self.lblLives.text = f"Lives: {self.lives}"
                 
-            if self.lives == 0:
-                self.stop()
-        #how to set to full seconds?
         self.lblTime.text = f"Time: {self.timer.getElapsedTime():.2f}"
+                
+        if self.lives == 0:
+            self.stop()
+            self.time = self.timer.getElapsedTime()
+            print(self.time)
 
         
 class Rocket(simpleGE.Sprite):
@@ -120,14 +129,16 @@ class lblLives(simpleGE.Label):
             
 def main():
     keepGoing = True
+    time = 0
     while keepGoing:
         
-        instructions = Instructions()
+        instructions = Instructions(time)
         instructions.start()
         
         if instructions.response == "Play":
             game = Game()
             game.start()
+            time = game.time
         if instructions.response == "Quit":
             keepGoing = False
             
