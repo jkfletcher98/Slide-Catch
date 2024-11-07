@@ -68,6 +68,8 @@ class Game(simpleGE.Scene):
                 
             if self.lives == 0:
                 self.stop()
+        #how to set to full seconds?
+        self.lblTime.text = f"Time: {self.timer.getElapsedTime():.2f}"
 
         
 class Rocket(simpleGE.Sprite):
@@ -122,7 +124,6 @@ def main():
         
         instructions = Instructions()
         instructions.start()
-        print(instructions.response)
         
         if instructions.response == "Play":
             game = Game()
