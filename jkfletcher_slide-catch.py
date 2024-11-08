@@ -54,6 +54,8 @@ class Game(simpleGE.Scene):
         
         self.lives = 3
         
+        self.sndHit = simpleGE.Sound("sfx_explosionNormal.ogg")
+        
         self.rocket = Rocket(self)
         self.numMeteors = 8
         self.meteors = []
@@ -70,6 +72,7 @@ class Game(simpleGE.Scene):
         for meteor in self.meteors:
             if self.rocket.collidesWith(meteor):
                 meteor.reset()
+                self.sndHit.play()
                 self.lives -= 1
                 self.lblLives.text = f"Lives: {self.lives}"
                 
@@ -141,6 +144,7 @@ def main():
             time = game.time
         if instructions.response == "Quit":
             keepGoing = False
+            exit()
             
     
 if __name__ == "__main__":
